@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <?!= include('Stylesheet'); ?>
+  </head>
+  <body>
+   <div id="home">
+      <h1>Password Manager</h1>
+      <div class="label">Domain:</div>
+      <select id="siteSelection" class="field"></select>
+      <div class="label">Username:</div>
+      <div id="username" class="field">Username</div>
+      <div class="hidden label" id="passlabel">Password:</div>
+      <textarea id="pass" class="hidden field" rows="1">P455W0rD</textarea>
+      <div id="buttons">
+        <div id="column1">
+          <button id="hideButton">Show Password</button>
+        </div>
+        <div id="column2">
+          <button id="copyButton">Copy Password</button>
+        </div>
+        <button id="showAddButton">Generate Password</a></div>
+      </div>
+      <div>
+      <div class="spacer"></div>
+    </div>
+    <div id="add" class="hidden">
+     <h1>Password Manager: Add Password</h1>
+      <label class="label">Domain:</label>
+      <input type="text" id="domainName" class="field" />
+      <label class="label">Username:</label>
+      <input type="text" id="newUsername" class="field" />
+      <div id="buttons">
+        <button id="addButton">Generate Password</button>
+        <button id="cancelButton">Cancel</button>
+      </div>
+      <div>
+      <div class="spacer"></div>
+    </div>
+  </body>
+  <?!= include('HomeJS'); ?>
+</html>
