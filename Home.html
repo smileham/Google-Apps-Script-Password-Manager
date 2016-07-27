@@ -2,12 +2,14 @@
 <html>
   <head>
     <base target="_top">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
     <?!= include('Stylesheet'); ?>
   </head>
   <body>
     <div id="home">
-      <h1>Password Manager</h1>
+      <header>
+        <h1>Password Manager</h1>
+      </header>
       <div class="label">Domain:</div>
       <select id="siteSelection" class="field"></select>
       <div class="label">Username:</div>
@@ -16,23 +18,25 @@
       <textarea id="pass" class="hidden field" rows="1">P455W0rD</textarea>
       <div id="buttons">
         <div id="column1">
-          <button id="hideButton">Show Password</button>
+          <button id="hideButton" class="warning">Show Password</button>
         </div>
         <div id="column2">
-          <button id="copyButton">Copy Password</button>
+          <button id="copyButton" class="primary">Copy Password</button>
         </div>
         <button id="showAddButton">Generate Password</button>
       </div>
       <div class="spacer"></div>
     </div>
     <div id="add" class="hidden">
-      <h1>Password Manager: Add Password</h1>
+      <header>
+        <h1>Password Manager</h1><h2>Add Password</h2>
+      </header>
       <div class="label">Domain:</div>
       <input type="text" id="domainName" class="field" />
       <div class="label">Username:</div>
       <input type="text" id="newUsername" class="field" />
       <div id="buttons">
-        <button id="addButton">Generate Password</button>
+        <button id="addButton" class="primary">Generate Password</button>
         <button id="cancelButton">Cancel</button>
       </div>
       <div class="spacer"></div>
