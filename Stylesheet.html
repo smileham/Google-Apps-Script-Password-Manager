@@ -1,0 +1,31 @@
+<style>
+  * {box-sizing: border-box; margin:0; padding:0; font: 16px "Lucida Console", Monaco, monospace;}
+  
+  #home, #add {width:100%; padding:1em}
+  #column1, #column2 {width:100%; padding:0em; clear:both}
+  #copyButton{margin-top:1em}
+  
+  @media only screen and (min-width: 768px) {
+    #copyButton {margin-top:initial}
+    #home, #add {width:500px; margin:0 auto; border:1px solid black}
+    #column1, #column2 {width:50%; float:left; clear:none; padding:0}
+    #column1 {padding-right:0.5em}
+    #column2 {padding-left:0.5em}
+    body {padding:1em}
+  }
+  
+  .field {width:100%; padding:1em; margin-bottom:1em;border: 1px solid black; text-align:center}
+  #pass {margin:0 0 1em 0; height:auto;}
+
+  .hidden {position:absolute; left:-10000px;}
+  .shown {position:relative; left:0px}
+  button {width:100%; font: 16px "Lucida Console", Monaco, monospace; padding:1em;}
+  .label {width:100%; font: 10px sans-serif; padding:0}
+  .error {border-color: red}
+  
+  #cancelButton, #showAddButton{margin-top:1em};
+  
+  .spacer{clear:both; display:block; content:""}
+  h1 {font-weight:bold}
+  
+</style>
