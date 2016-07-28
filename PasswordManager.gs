@@ -45,6 +45,15 @@ function getSiteUserPass(theSiteIndex) {
 
 }
 
+function removePassword(theSiteIndex) {
+    var thePasswordSheet = SpreadsheetApp.openById(PropertiesService.getScriptProperties().getProperty("SpreadsheetId"));
+    var theSheet = thePasswordSheet.getSheetByName("Home Passwords");
+
+    theSheet.deleteRow(theSiteIndex);
+  
+    return true;
+}
+
 function insertPassword(theCredentials) {
     var thePasswordSheet = SpreadsheetApp.openById(PropertiesService.getScriptProperties().getProperty("SpreadsheetId"));
     var theSeed = thePasswordSheet.getRangeByName("HomeSeed").getValue();
