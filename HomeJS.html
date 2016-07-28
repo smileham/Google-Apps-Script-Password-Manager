@@ -1,135 +1,159 @@
 <script>
+    function doCopy() {
+        var thePassword = document.getElementById("pass");
+        thePassword.select();
 
-function doCopy() {
-var thePassword = document.getElementById("pass");
-  thePassword.select();
-
-  try {
-    var successful = document.execCommand('copy');
-  } catch (err) {
-    console.log("Copy failed");
-  }
-}
-
-function populateSites() {
-    google.script.run.withSuccessHandler(showSiteList)
-        .withFailureHandler(showError)
-        .getSiteList();
-  }
-  function showSiteList(theSites) {
-    var theSiteList = document.getElementById("siteSelection");
-    var theSiteListLength = theSiteList.length;
-    
-    for (var i=(theSiteListLength-1); i>=0; i--) {
-      theSiteList.remove(i);
-    }
-    
-    for (var i=0; i<theSites.length; i++) {
-      var theOption = document.createElement("option");
-      theOption.text=theSites[i];
-      theSiteList.add(theOption);
-    }
-    theSiteList.addEventListener('change', function(){getSiteAuth();});
-  }
-  
-  function getSiteAuth() {
-   google.script.run.withSuccessHandler(setSiteAuth)
-        .withFailureHandler(showError)
-        .getSiteUserPass(document.getElementById("siteSelection").selectedIndex+1);
-}
-  function setSiteAuth(auth) {
-   document.getElementById("username").innerHTML=auth.user;
-   document.getElementById("pass").innerHTML=auth.pass;
-  }
-  
-  
-  function bindButtons(){
-    document.getElementById("copyButton").addEventListener('click', function(){doCopy(); return false});
-    document.getElementById("hideButton").addEventListener('click', function(){togglePassword(); return false});
-    document.getElementById("addButton").addEventListener('click', function(){addPassword(); return false});
-    document.getElementById("showAddButton").addEventListener('click', function(){showAddPassword(); return false});
-    document.getElementById("cancelButton").addEventListener('click', function(){showHome(); return false});
-  }
-  
-  function togglePassword() {
-    var thePass = document.getElementById("pass");
-    if (thePass.className!="hidden field") {
-    thePass.className="hidden field";
-    document.getElementById("hideButton").innerText="Show Password";
-    document.getElementById("passlabel").className="hidden label";
-    }
-    else {
-    thePass.className="shown field"
-    document.getElementById("hideButton").innerText="Hide Password";
-    document.getElementById("passlabel").className="shown label";
-    }
-    
-  }
-  
-  function addPassword() {
-    var theDomain = document.getElementById("domainName");
-    var theUsername = document.getElementById("newUsername");
-    var error = false;
-    if (!theDomain.value) {
-      theDomain.className="field error";
-      error = true;
-    }
-    else
-    {
-      var domainList = document.getElementById("siteSelection").options;
-      for (var i=0; i<domainList.length; i++) {
-        if (domainList[i].text == theDomain.value) {
-          theDomain.className="field dupe";
-          error = true;
-          break;
+        try {
+            var successful = document.execCommand('copy');
+        } catch (err) {
+            console.log("Copy failed");
         }
-      }
-      if (!error) {
-        theDomain.className="field";
-      }
     }
-    
-    if (!theUsername.value) {
-      theUsername.className="field error";
-      error = true;
+
+    function populateSites() {
+        document.getElementById("busy").className = "block";
+        google.script.run.withSuccessHandler(showSiteList)
+            .withFailureHandler(showError)
+            .getSiteList();
     }
-    else
-    {
-      theUsername.className="field";
-    }
-    
-    if (!error) {
-    var theCredentials = {"domain":theDomain.value, "username":theUsername.value};
-  
-  
-    google.script.run.withSuccessHandler(successPassword)
-        .withFailureHandler(showError)
-        .insertPassword(theCredentials);
+
+    function showSiteList(theSites) {
+        var theSiteList = document.getElementById("siteSelection");
+        var theSiteListLength = theSiteList.length;
+
+        for (var i = (theSiteListLength - 1); i >= 0; i--) {
+            theSiteList.remove(i);
         }
-  }
- 
-  
-  function showError(e){
-    alert(e);
-  }
-  
-  function successPassword(e){
-    showHome();
-  }
-  
-  function showAddPassword() {
-    document.getElementById("newUsername").value="";
-    document.getElementById("domainName").value="";
-    document.getElementById("home").className="hidden";
-    document.getElementById("add").className="shown";
-  }
-  
-  function showHome() {
-    document.getElementById("add").className="hidden";
-    document.getElementById("home").className="shown";
+
+        for (var i = 0; i < theSites.length; i++) {
+            var theOption = document.createElement("option");
+            theOption.text = theSites[i];
+            theSiteList.add(theOption);
+        }
+        theSiteList.addEventListener('change', function() {
+            getSiteAuth();
+        });
+        document.getElementById("busy").className = "available";
+    }
+
+    function getSiteAuth() {
+        document.getElementById("busy").className = "block";
+        google.script.run.withSuccessHandler(setSiteAuth)
+            .withFailureHandler(showError)
+            .getSiteUserPass(document.getElementById("siteSelection").selectedIndex + 1);
+    }
+
+    function setSiteAuth(auth) {
+        document.getElementById("username").innerHTML = auth.user;
+        document.getElementById("pass").innerHTML = auth.pass;
+        document.getElementById("busy").className = "available";
+    }
+
+
+    function bindButtons() {
+        document.getElementById("copyButton").addEventListener('click', function() {
+            doCopy();
+            return false
+        });
+        document.getElementById("hideButton").addEventListener('click', function() {
+            togglePassword();
+            return false
+        });
+        document.getElementById("addButton").addEventListener('click', function() {
+            addPassword();
+            return false
+        });
+        document.getElementById("showAddButton").addEventListener('click', function() {
+            showAddPassword();
+            return false
+        });
+        document.getElementById("cancelButton").addEventListener('click', function() {
+            showHome();
+            return false
+        });
+    }
+
+    function togglePassword() {
+        var thePass = document.getElementById("pass");
+        if (thePass.className != "hidden field") {
+            thePass.className = "hidden field";
+            document.getElementById("hideButton").innerText = "Show Password";
+            document.getElementById("passlabel").className = "hidden label";
+        } else {
+            thePass.className = "shown field"
+            document.getElementById("hideButton").innerText = "Hide Password";
+            document.getElementById("passlabel").className = "shown label";
+        }
+
+    }
+
+    function addPassword() {
+        document.getElementById("busy").className = "block";
+        var theDomain = document.getElementById("domainName");
+        var theUsername = document.getElementById("newUsername");
+        var error = false;
+        if (!theDomain.value) {
+            theDomain.className = "field error";
+            error = true;
+        } else {
+            var domainList = document.getElementById("siteSelection").options;
+            for (var i = 0; i < domainList.length; i++) {
+                if (domainList[i].text == theDomain.value) {
+                    theDomain.className = "field dupe";
+                    error = true;
+                    break;
+                }
+            }
+            if (!error) {
+                theDomain.className = "field";
+            }
+        }
+
+        if (!theUsername.value) {
+            theUsername.className = "field error";
+            error = true;
+        } else {
+            theUsername.className = "field";
+        }
+
+        if (!error) {
+            var theCredentials = {
+                "domain": theDomain.value,
+                "username": theUsername.value
+            };
+
+
+            google.script.run.withSuccessHandler(successPassword)
+                .withFailureHandler(showError)
+                .insertPassword(theCredentials);
+        } else {
+            document.getElementById("busy").className = "available";
+        }
+    }
+
+
+    function showError(e) {
+        alert(e);
+    }
+
+    function successPassword(e) {
+        showHome();
+        document.getElementById("busy").className = "available";
+    }
+
+    function showAddPassword() {
+        document.getElementById("newUsername").value = "";
+        document.getElementById("domainName").value = "";
+        document.getElementById("home").className = "hidden";
+        document.getElementById("add").className = "shown";
+    }
+
+    function showHome() {
+        document.getElementById("add").className = "hidden";
+        document.getElementById("home").className = "shown";
+        populateSites();
+    }
+
     populateSites();
-  }
-  
-  populateSites();
-  bindButtons();
-    </script>
+    bindButtons();
+</script>
