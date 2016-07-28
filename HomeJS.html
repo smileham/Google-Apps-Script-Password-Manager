@@ -10,11 +10,19 @@
         }
     }
 
-    function populateSites() {
+    function populateSites(page) {
         document.getElementById("busy").className = "block";
-        google.script.run.withSuccessHandler(showSiteList)
-            .withFailureHandler(showError)
-            .getSiteList();
+        if (page=="home") {
+            google.script.run.withSuccessHandler(showSiteList)
+                .withFailureHandler(showError)
+                .getSiteList();
+        }
+        else if (page=="delete") {
+            google.script.run.withSuccessHandler(showDeleteList)
+                .withFailureHandler(showError)
+                .getSiteList();
+        }
+            
     }
 
     function showSiteList(theSites) {
@@ -33,6 +41,22 @@
         theSiteList.addEventListener('change', function() {
             getSiteAuth();
         });
+        document.getElementById("busy").className = "available";
+    }
+    
+    function showDeleteList(theSites) {
+        var theSiteList = document.getElementById("deleteDomain");
+        var theSiteListLength = theSiteList.length;
+
+        for (var i = (theSiteListLength - 1); i >= 0; i--) {
+            theSiteList.remove(i);
+        }
+
+        for (var i = 0; i < theSites.length; i++) {
+            var theOption = document.createElement("option");
+            theOption.text = theSites[i];
+            theSiteList.add(theOption);
+        }
         document.getElementById("busy").className = "available";
     }
 
@@ -63,14 +87,26 @@
             addPassword();
             return false
         });
+        document.getElementById("deleteButton").addEventListener('click', function() {
+            deletePassword();
+            return false
+        });
         document.getElementById("showAddButton").addEventListener('click', function() {
             showAddPassword();
             return false
         });
-        document.getElementById("cancelButton").addEventListener('click', function() {
-            showHome();
+        document.getElementById("showDeleteButton").addEventListener('click', function() {
+            showDeletePassword();
             return false
         });
+        var cancelButtons = document.getElementsByClassName("cancelButton");
+        for (var i=0; i<cancelButtons.length; i++) {
+            cancelButtons[i].addEventListener('click', function() {
+                showHome();
+                return false
+            });
+        }
+        
     }
 
     function togglePassword() {
@@ -130,6 +166,20 @@
             document.getElementById("busy").className = "available";
         }
     }
+    
+    function deletePassword() {
+      document.getElementById("busy").className = "block";
+      var selectedSite = document.getElementById("deleteDomain").selectedIndex;
+      
+      if (selectedSite>0) {
+          google.script.run.withSuccessHandler(successPassword)
+                .withFailureHandler(showError)
+                .removePassword(selectedSite + 1);
+      }
+      else {
+          document.getElementById("busy").className = "available";
+      }
+    }
 
 
     function showError(e) {
@@ -145,15 +195,24 @@
         document.getElementById("newUsername").value = "";
         document.getElementById("domainName").value = "";
         document.getElementById("home").className = "hidden";
+        document.getElementById("delete").className = "hidden";
         document.getElementById("add").className = "shown";
     }
 
     function showHome() {
+        populateSites("home");
         document.getElementById("add").className = "hidden";
+        document.getElementById("delete").className = "hidden";
         document.getElementById("home").className = "shown";
-        populateSites();
+    }
+    
+    function showDeletePassword() {
+        populateSites("delete");
+        document.getElementById("home").className = "hidden";
+        document.getElementById("delete").className = "shown";
+        document.getElementById("add").className = "hidden";
     }
 
-    populateSites();
+    populateSites("home");
     bindButtons();
 </script>
