@@ -24,6 +24,7 @@
           <button id="copyButton" class="primary">Copy Password</button>
         </div>
         <button id="showAddButton">Generate Password</button>
+        <button id="showDeleteButton">Delete Password</button>
       </div>
       <div class="spacer"></div>
     </div>
@@ -34,10 +35,20 @@
       <input type="text" id="newUsername" class="field" />
       <div id="buttons">
         <button id="addButton" class="primary">Generate Password</button>
-        <button id="cancelButton">Cancel</button>
+        <button id="cancelAddButton" class="cancelButton">Cancel</button>
       </div>
       <div class="spacer"></div>
     </div>
+    <div id="delete" class="hidden">
+      <div class="label">Domain:</div>
+      <select id="deleteDomain" class="field"></select>
+      <div id="buttons">
+        <button id="deleteButton" class="warning">Delete Password</button>
+        <button id="cancelDelButton" class="cancelButton">Cancel</button>
+      </div>
+      <div class="spacer"></div>
+    </div>
+    <div id="busy" class="available"></div>
   </body>
   <?!= include('HomeJS'); ?>
 </html>
