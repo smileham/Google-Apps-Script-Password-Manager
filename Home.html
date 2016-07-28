@@ -6,10 +6,10 @@
     <?!= include('Stylesheet'); ?>
   </head>
   <body>
+    <header>
+      <h1>Password Manager</h1>
+    </header>
     <div id="home">
-      <header>
-        <h1>Password Manager</h1>
-      </header>
       <div class="label">Domain:</div>
       <select id="siteSelection" class="field"></select>
       <div class="label">Username:</div>
@@ -28,9 +28,6 @@
       <div class="spacer"></div>
     </div>
     <div id="add" class="hidden">
-      <header>
-        <h1>Password Manager</h1><h2>Add Password</h2>
-      </header>
       <div class="label">Domain:</div>
       <input type="text" id="domainName" class="field" />
       <div class="label">Username:</div>
