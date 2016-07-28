@@ -7,7 +7,7 @@ var thePassword = document.getElementById("pass");
   try {
     var successful = document.execCommand('copy');
   } catch (err) {
-    console.log('Oops, unable to copy');
+    console.log("Copy failed");
   }
 }
 
@@ -76,7 +76,17 @@ function populateSites() {
     }
     else
     {
-      theDomain.className="field";
+      var domainList = document.getElementById("siteSelection").options;
+      for (var i=0; i<domainList.length; i++) {
+        if (domainList[i].text == theDomain.value) {
+          theDomain.className="field dupe";
+          error = true;
+          break;
+        }
+      }
+      if (!error) {
+        theDomain.className="field";
+      }
     }
     
     if (!theUsername.value) {
