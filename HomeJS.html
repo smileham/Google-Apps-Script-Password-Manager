@@ -11,7 +11,7 @@
     }
 
     function populateSites(page) {
-        document.getElementById("busy").className = "block";
+        block();
         if (page=="home") {
             google.script.run.withSuccessHandler(showSiteList)
                 .withFailureHandler(showError)
@@ -41,7 +41,7 @@
         theSiteList.addEventListener('change', function() {
             getSiteAuth();
         });
-        document.getElementById("busy").className = "available";
+        unBlock();
     }
     
     function showDeleteList(theSites) {
@@ -57,11 +57,11 @@
             theOption.text = theSites[i];
             theSiteList.add(theOption);
         }
-        document.getElementById("busy").className = "available";
+        unBlock();
     }
 
     function getSiteAuth() {
-        document.getElementById("busy").className = "block";
+        block();
         google.script.run.withSuccessHandler(setSiteAuth)
             .withFailureHandler(showError)
             .getSiteUserPass(document.getElementById("siteSelection").selectedIndex + 1);
@@ -70,7 +70,7 @@
     function setSiteAuth(auth) {
         document.getElementById("username").innerHTML = auth.user;
         document.getElementById("pass").innerHTML = auth.pass;
-        document.getElementById("busy").className = "available";
+        unBlock();
     }
 
 
@@ -89,15 +89,27 @@
         });
         document.getElementById("deleteButton").addEventListener('click', function() {
             deletePassword();
-            return false
+            return false;
+        });
+        document.getElementById("configButton").addEventListener('click', function() {
+            updateConfig();
+            return false;
         });
         document.getElementById("showAddButton").addEventListener('click', function() {
             showAddPassword();
-            return false
+            return false;
         });
         document.getElementById("showDeleteButton").addEventListener('click', function() {
             showDeletePassword();
-            return false
+            return false;
+        });
+        document.getElementById("showConfigButton").addEventListener('click', function() {
+            showConfig();
+            return false;
+        });
+        document.getElementById("menuButton").addEventListener('click', function() {
+            showMenu();
+            return false;
         });
         var cancelButtons = document.getElementsByClassName("cancelButton");
         for (var i=0; i<cancelButtons.length; i++) {
@@ -122,9 +134,17 @@
         }
 
     }
+    
+    function block() {
+      document.getElementById("busy").className = "block";
+    }
+    
+    function unBlock() {
+      document.getElementById("busy").className = "available";
+    }
 
     function addPassword() {
-        document.getElementById("busy").className = "block";
+        block();
         var theDomain = document.getElementById("domainName");
         var theUsername = document.getElementById("newUsername");
         var error = false;
@@ -159,25 +179,25 @@
             };
 
 
-            google.script.run.withSuccessHandler(successPassword)
+            google.script.run.withSuccessHandler(success)
                 .withFailureHandler(showError)
                 .insertPassword(theCredentials);
         } else {
-            document.getElementById("busy").className = "available";
+            unBlock();
         }
     }
     
     function deletePassword() {
-      document.getElementById("busy").className = "block";
+      block();
       var selectedSite = document.getElementById("deleteDomain").selectedIndex;
       
       if (selectedSite>0) {
-          google.script.run.withSuccessHandler(successPassword)
+          google.script.run.withSuccessHandler(success)
                 .withFailureHandler(showError)
                 .removePassword(selectedSite + 1);
       }
       else {
-          document.getElementById("busy").className = "available";
+          unBlock();
       }
     }
 
@@ -186,9 +206,47 @@
         alert(e);
     }
 
-    function successPassword(e) {
+    function success(e) {
         showHome();
-        document.getElementById("busy").className = "available";
+        unBlock();
+    }
+    
+    function populateConfig() {
+        block();
+        google.script.run.withSuccessHandler(insertConfig)
+           .withFailureHandler(showError)
+           .getConfiguration();
+    }
+    
+    function insertConfig(theConfig) {
+        document.getElementById("seedWord").value=theConfig.seed;
+        document.getElementById("passwordLength").value=theConfig.passwordLength;
+        unBlock();
+    }
+    
+    function updateConfig() {
+        var theSeed = document.getElementById("seedWord");
+        var thePasswordLength = document.getElementById("passwordLength");
+        var error = false;
+        if (!theSeed.value) {
+            theSeed.className = "field error";
+            error = true;
+        } else {
+            theSeed.className = "field";
+        }
+
+        if (!thePasswordLength.value) {
+            thePasswordLength.className = "field error";
+            error = true;
+        } else {
+            thePasswordLength.className = "field";
+        }
+
+        if (!error) {
+            google.script.run.withSuccessHandler(success)
+                .withFailureHandler(showError)
+                .setConfiguration({"seed":theSeed.value, "passwordLength":thePasswordLength.value});
+        }
     }
 
     function showAddPassword() {
@@ -197,6 +255,8 @@
         document.getElementById("home").className = "hidden";
         document.getElementById("delete").className = "hidden";
         document.getElementById("add").className = "shown";
+        document.getElementById("config").className = "hidden";
+        document.getElementById("menu").className = "hidden";
     }
 
     function showHome() {
@@ -204,6 +264,8 @@
         document.getElementById("add").className = "hidden";
         document.getElementById("delete").className = "hidden";
         document.getElementById("home").className = "shown";
+        document.getElementById("config").className = "hidden";
+        document.getElementById("menu").className = "hidden";
     }
     
     function showDeletePassword() {
@@ -211,6 +273,25 @@
         document.getElementById("home").className = "hidden";
         document.getElementById("delete").className = "shown";
         document.getElementById("add").className = "hidden";
+        document.getElementById("config").className = "hidden";
+        document.getElementById("menu").className = "hidden";
+    }
+    
+    function showConfig() {
+        populateConfig();
+        document.getElementById("home").className = "hidden";
+        document.getElementById("delete").className = "hidden";
+        document.getElementById("add").className = "hidden";
+        document.getElementById("config").className = "shown";
+        document.getElementById("menu").className = "hidden";
+    }
+    
+    function showMenu() {
+       document.getElementById("home").className = "hidden";
+        document.getElementById("delete").className = "hidden";
+        document.getElementById("add").className = "hidden";
+        document.getElementById("config").className = "hidden";
+        document.getElementById("menu").className = "shown";
     }
 
     populateSites("home");
