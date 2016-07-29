@@ -29,10 +29,16 @@
     }
     #home,
     #add,
-    #delete {
-        width: 100%;
-        padding: 1em;
-        background-color: white
+    #delete,
+    #config,
+    #menu {
+        width: 95%;
+        padding: 0.5em;
+        background-color: white;
+        margin: 0 auto;
+        border: 1px solid #333;
+        border-radius: 2px;
+        box-shadow: 0 0 4px rgba(0, 0, 0, .14), 0 4px 8px rgba(0, 0, 0, .28);
     }
     #column1,
     #column2 {
@@ -49,12 +55,11 @@
         }
         #home,
         #add,
-        #delete {
-            width: 500px;
-            margin: 0 auto;
-            border: 1px solid #333;
-            border-radius: 2px;
-            box-shadow: 0 0 4px rgba(0, 0, 0, .14), 0 4px 8px rgba(0, 0, 0, .28);
+        #delete,
+        #config,
+        #menu  {
+            width: 32em;
+            padding: 1em;
         }
         #column1,
         #column2 {
@@ -125,13 +130,14 @@
     .dupe {
         border-color: blue
     }
-    #cancelDelButton,
-    #cancelAddButton,
+
+    .cancelButton,
     #showDeleteButton,
-    #showAddButton {
+    #showAddButton,
+    #showConfigButton {
         margin-top: 1em
     }
-    ;
+    
     .spacer {
         clear: both;
         display: block;
@@ -139,7 +145,7 @@
     }
     h1 {
         font-weight: bold;
-        font-size: 24px
+        font-size: 24px;
     }
     header {
         margin: 0 0 1em 0;
@@ -147,5 +153,14 @@
         box-shadow: 0 0 4px rgba(0, 0, 0, .14), 0 4px 8px rgba(0, 0, 0, .28);
         padding: 1em;
         color: white;
+        z-index:110;
     }
+    #menuButton {position: absolute; top: 0.75em; right: 1em; width:6em; padding:0.5em}
+    
+    /*#menu {width:15em; height:100%; position:absolute; top:4.1em; left:0; background-color:white;
+    padding:1em;
+    box-shadow: 0 0 4px rgba(0, 0, 0, .14), 0 4px 8px rgba(0, 0, 0, .28);
+    z-index:110}
+    
+    nav a {width:100%; display:block; padding: 0 1em 0 0}*/
 </style>
