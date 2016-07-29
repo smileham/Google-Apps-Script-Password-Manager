@@ -7,8 +7,16 @@
   </head>
   <body>
     <header>
+      <button id="menuButton">Menu</button>
       <h1>Password Manager</h1>
     </header>
+    <div id="menu" class="hidden">
+      <h2>Menu</h2>
+      <button id="showAddButton">Generate Password</button>
+      <button id="showDeleteButton">Delete Password</button>
+      <button id="showConfigButton">Configure</button>
+      <button id="" class="cancelButton">Cancel</button>
+    </div>
     <div id="home">
       <div class="label">Domain:</div>
       <select id="siteSelection" class="field"></select>
@@ -23,8 +31,6 @@
         <div id="column2">
           <button id="copyButton" class="primary">Copy Password</button>
         </div>
-        <button id="showAddButton">Generate Password</button>
-        <button id="showDeleteButton">Delete Password</button>
       </div>
       <div class="spacer"></div>
     </div>
@@ -48,6 +54,19 @@
       </div>
       <div class="spacer"></div>
     </div>
+    
+    <div id="config" class="hidden">
+      <div class="label">Seed:</div>
+      <input type="text" id="seedWord" class="field" />
+      <div class="label">Password Length:</div>
+      <input type="number" id="passwordLength" class="field" />
+      <div id="buttons">
+        <button id="configButton" class="warning">Save Config</button>
+        <button id="cancelAddButton" class="cancelButton">Cancel</button>
+      </div>
+      <div class="spacer"></div>
+    </div>
+    
     <div id="busy" class="available"></div>
   </body>
   <?!= include('HomeJS'); ?>
