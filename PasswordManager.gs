@@ -1,4 +1,8 @@
 function doGet(e) {
+    if (checkConfigStatus_()>0) {
+      PropertiesService.getScriptProperties().setProperty("SpreadsheetId", createSpreadsheet_());
+    }
+  
     return HtmlService.createTemplateFromFile('Home').evaluate()
         .addMetaTag('viewport', 'width=device-width, initial-scale=1')
         .setTitle('Password Manager')
@@ -16,7 +20,8 @@ function encodeSHA256(text) {
 }
 
 function createPassword(domain, username, seed) {
-    return encodeSHA256(domain + username + seed).substring(0, PropertiesService.getScriptProperties().getProperty("PasswordLength"))
+    var passwordLength = SpreadsheetApp.openById(PropertiesService.getScriptProperties().getProperty("SpreadsheetId")).getSheetByName("Config").getRange("B2").getValue();
+    return encodeSHA256(domain + username + seed).substring(0, passwordLength)
 }
 
 function getScriptUrl() {
@@ -25,7 +30,7 @@ function getScriptUrl() {
 
 function getSiteList() {
     var thePasswordSheet = SpreadsheetApp.openById(PropertiesService.getScriptProperties().getProperty("SpreadsheetId"));
-    var theSheet = thePasswordSheet.getSheetByName("Home Passwords");
+    var theSheet = thePasswordSheet.getSheetByName("Passwords");
 
     var theValues = theSheet.getRange("A:A").getValues();
 
@@ -34,9 +39,9 @@ function getSiteList() {
 
 function getSiteUserPass(theSiteIndex) {
     var thePasswordSheet = SpreadsheetApp.openById(PropertiesService.getScriptProperties().getProperty("SpreadsheetId"));
-    var theSheet = thePasswordSheet.getSheetByName("Home Passwords");
+    var theSheet = thePasswordSheet.getSheetByName("Passwords");
 
-    var theValues = theSheet.getRange("C" + theSiteIndex + ":E" + theSiteIndex).getValues();
+    var theValues = theSheet.getRange("B" + theSiteIndex + ":D" + theSiteIndex).getValues();
 
     return {
         "user": theValues[0][0],
@@ -47,7 +52,7 @@ function getSiteUserPass(theSiteIndex) {
 
 function removePassword(theSiteIndex) {
     var thePasswordSheet = SpreadsheetApp.openById(PropertiesService.getScriptProperties().getProperty("SpreadsheetId"));
-    var theSheet = thePasswordSheet.getSheetByName("Home Passwords");
+    var theSheet = thePasswordSheet.getSheetByName("Passwords");
 
     theSheet.deleteRow(theSiteIndex);
   
@@ -56,8 +61,8 @@ function removePassword(theSiteIndex) {
 
 function insertPassword(theCredentials) {
     var thePasswordSheet = SpreadsheetApp.openById(PropertiesService.getScriptProperties().getProperty("SpreadsheetId"));
-    var theSeed = thePasswordSheet.getRangeByName("HomeSeed").getValue();
-    var theSheet = thePasswordSheet.getSheetByName("Home Passwords");
+  var theSeed = thePasswordSheet.getSheetByName("Config").getRange("B1").getValue();
+    var theSheet = thePasswordSheet.getSheetByName("Passwords");
 
     var newPassword = createPassword(theCredentials.domain, theCredentials.username, theSeed);
 
@@ -67,8 +72,8 @@ function insertPassword(theCredentials) {
         newPassword = "'" + newPassword;
     }
 
-    theSheet.appendRow([theCredentials.domain, "", theCredentials.username, new Date(), newPassword, newPassword, "No"]);
+    theSheet.appendRow([theCredentials.domain, theCredentials.username, new Date(), newPassword]);
 
-    var thePasswordRange = thePasswordSheet.getRange("A2:G" + theSheet.getMaxRows());
+    var thePasswordRange = thePasswordSheet.getRange("A2:D" + theSheet.getMaxRows());
     thePasswordRange.sort(1);
 }
