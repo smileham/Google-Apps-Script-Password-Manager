@@ -114,7 +114,7 @@
         var cancelButtons = document.getElementsByClassName("cancelButton");
         for (var i=0; i<cancelButtons.length; i++) {
             cancelButtons[i].addEventListener('click', function() {
-                showHome();
+                showHome(false);
                 return false
             });
         }
@@ -207,7 +207,7 @@
     }
 
     function success(e) {
-        showHome();
+        showHome(true);
         unBlock();
     }
     
@@ -259,8 +259,10 @@
         document.getElementById("menu").className = "hidden";
     }
 
-    function showHome() {
-        populateSites("home");
+    function showHome(update) {
+        if (update) {
+            populateSites("home");
+        }
         document.getElementById("add").className = "hidden";
         document.getElementById("delete").className = "hidden";
         document.getElementById("home").className = "shown";
@@ -287,11 +289,17 @@
     }
     
     function showMenu() {
-       document.getElementById("home").className = "hidden";
-        document.getElementById("delete").className = "hidden";
-        document.getElementById("add").className = "hidden";
-        document.getElementById("config").className = "hidden";
-        document.getElementById("menu").className = "shown";
+        if (document.getElementById("menu").className == "hidden") {
+            document.getElementById("home").className = "hidden";
+            document.getElementById("delete").className = "hidden";
+            document.getElementById("add").className = "hidden";
+            document.getElementById("config").className = "hidden";
+            document.getElementById("menu").className = "shown";
+        }
+        else {
+            showHome(false);
+        }
+            
     }
 
     populateSites("home");
